@@ -3,6 +3,7 @@
 #include "j1App.h"
 #include "j1FileSystem.h"
 #include "j1Audio.h"
+#include "j1Input.h"
 
 #include "SDL/include/SDL.h"
 #include "SDL_mixer\include\SDL_mixer.h"
@@ -17,6 +18,28 @@ j1Audio::j1Audio() : j1Module()
 // Destructor
 j1Audio::~j1Audio()
 {}
+
+bool j1Audio::Load(pugi::xml_node& save) {
+	bool ret = true;
+
+	Mix_VolumeMusic(save.child("volume").attribute("music").as_int(50));
+
+	return ret;
+}
+
+bool j1Audio::Save(pugi::xml_node& save) {
+	bool ret = true;
+
+	if (save.child("volume").empty()) {
+		save = save.append_child("volume");
+		save.append_attribute("music").set_value(Mix_VolumeMusic(-1));
+	}
+	else {
+		save.child("volume").attribute("music").set_value(Mix_VolumeMusic(-1));
+	}
+
+	return ret;
+}
 
 // Called before render is available
 bool j1Audio::Awake(pugi::xml_node& config)
@@ -52,6 +75,23 @@ bool j1Audio::Awake(pugi::xml_node& config)
 	}
 
 	return ret;
+}
+
+bool j1Audio::Update(float dt)
+{
+
+	if (App->input->GetKey(SDL_SCANCODE_KP_PLUS) == KEY_DOWN) {
+		Mix_VolumeMusic(Mix_VolumeMusic(-1) + 10);
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_KP_MINUS) == KEY_DOWN) {
+		if (Mix_VolumeMusic(-1) < 10)
+			Mix_VolumeMusic(0);
+		else
+			Mix_VolumeMusic(Mix_VolumeMusic(-1) - 10);
+	}
+	
+	return true;
 }
 
 // Called before quitting
@@ -169,6 +209,6 @@ bool j1Audio::PlayFx(unsigned int id, int repeat)
 	{
 		Mix_PlayChannel(-1, fx[id - 1], repeat);
 	}
-
+	
 	return ret;
 }

@@ -212,8 +212,28 @@ bool j1App::RealLoad() {
 	return ret;
 }
 
-bool j1App::RealSave() const {
-	return 0;
+bool j1App::RealSave() {
+	bool ret = LoadSavegame();
+
+	if (ret == true)
+	{
+		p2List_item<j1Module*>* item;
+		item = modules.start;
+
+		while (item != NULL && ret == true)
+		{
+
+			if (save.child(item->data->name.GetString()).empty()) {				save.append_child(item->data->name.GetString());			}
+
+			ret = item->data->Save(save.child(item->data->name.GetString()));
+			item = item->next;
+
+		}
+
+		savegame_file.save_file("savegame.xml");
+	}
+
+	return ret;
 }
 
 

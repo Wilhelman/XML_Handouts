@@ -76,7 +76,7 @@ private:
 
 	bool RealLoad();
 
-	bool RealSave() const;
+	bool RealSave();
 
 public:
 

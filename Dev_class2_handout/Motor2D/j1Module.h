@@ -66,7 +66,7 @@ public:
 		return true;
 	}
 
-	virtual bool Save(pugi::xml_node&) const
+	virtual bool Save(pugi::xml_node&)
 	{
 		return true;
 	}

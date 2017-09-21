@@ -22,9 +22,25 @@ j1Render::~j1Render()
 bool j1Render::Load(pugi::xml_node& save) {
 	bool ret = true;
 
-
-	camera.x = save.child("camera").attribute("x").as_int(-269);
+	camera.x = save.child("camera").attribute("x").as_int(0);
+	camera.y = save.child("camera").attribute("y").as_int(0);
 	
+	return ret;
+}
+
+bool j1Render::Save(pugi::xml_node& save){
+	bool ret = true;
+
+	if (save.child("camera").empty()) {
+		save = save.append_child("camera");
+		save.append_attribute("x").set_value(camera.x);
+		save.append_attribute("y").set_value(camera.y);
+	}
+	else {
+		save.child("camera").attribute("x").set_value(camera.x);
+		save.child("camera").attribute("y").set_value(camera.y);
+	}
+
 	return ret;
 }
 

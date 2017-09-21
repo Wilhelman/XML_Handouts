@@ -20,6 +20,9 @@ public:
 	// Called before render is available
 	bool Awake(pugi::xml_node&);
 
+	// Called each loop iteration
+	bool Update(float dt);
+
 	// Called before quitting
 	bool CleanUp();
 
@@ -31,6 +34,9 @@ public:
 
 	// Play a previously loaded WAV
 	bool PlayFx(unsigned int fx, int repeat = 0);
+
+	bool Load(pugi::xml_node&);
+	bool Save(pugi::xml_node&);
 
 private:
 
